@@ -12,13 +12,9 @@ st.sidebar.header('Выберите инструмент')
 tool = st.sidebar.radio('',
                         ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
 
-
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-        
 # Define the chat function
 def chat():
+    st.markdown('<div style="height: 300px; overflow-y: scroll;">', unsafe_allow_html=True)
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []
 
@@ -39,6 +35,8 @@ def chat():
 
         if i < len(chat_history) - 1:
             st.markdown('---')
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Define the file upload function
 def file_upload():
