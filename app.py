@@ -12,17 +12,22 @@ st.sidebar.header('Выберите инструмент')
 tool = st.sidebar.radio('',
                         ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
 
+
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        
 # Define the chat function
 def chat():
-    message = st.text_input('Ваше сообщение:', key='chat_input')
-    if message:
-        with st.spinner('Отправка сообщения...'):
-            st.session_state.chat_history.append((message, 'user'))
-            response = get_response(message)
-            st.session_state.chat_history.append((response, 'ai'))
-
     if 'chat_history' not in st.session_state:
         st.session_state['chat_history'] = []
+
+    message = st.text_input('Ваше сообщение:', key='chat_input')
+    if st.button('Отправить'):
+        if message:
+            st.session_state.chat_history.append((message, 'user'))
+            st.session_state.chat_history.append(('Ответ от нейросети', 'ai'))
+            st.experimental_rerun()
 
     chat_history = st.session_state.chat_history
 
@@ -30,13 +35,10 @@ def chat():
         if role == 'user':
             st.markdown(f"**Вы:** {msg}", unsafe_allow_html=True)
         else:
-            st.markdown(f"**Нейросеть:** {msg}", unsafe_allow_html=True)
+            st.markdown(f"**Нейросеть:** Ответ от нейросети", unsafe_allow_html=True)
 
         if i < len(chat_history) - 1:
             st.markdown('---')
-
-    if st.button('Отправить'):
-        chat()
 
 # Define the file upload function
 def file_upload():
