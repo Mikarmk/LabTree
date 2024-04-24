@@ -9,8 +9,7 @@ if st.sidebar.image('logo.png', width=100):
 
 # Add a sidebar for selecting the tool
 st.sidebar.header('Выберите инструмент')
-tool = st.sidebar.radio('',
-                        ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
+tool = st.sidebar.button('Чат с нейросетью')
 
 # Define the chat function
 def chat():
@@ -35,11 +34,7 @@ def literature_search():
         st.write('Результаты поиска литературы:')
 
 # Display the appropriate tool based on the selected option
-if tool == 'Чат с нейросетью':
+if tool:
     chat()
-elif tool == 'Загрузка файлов':
-    file_upload()
-elif tool == 'Поиск литературы':
-    literature_search()
 else:
     st.write('')
