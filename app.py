@@ -1,94 +1,77 @@
 import streamlit as st
+import sqlite3
 
-# Set the page title
-st.title('Нейросеть и инструменты')
+# Создание базы данных
+def create_database():
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
 
-# Add a logo
-if st.sidebar.image('logo.png', width=100):
-    st.sidebar.markdown('')
+    c.execute('''CREATE TABLE IF NOT EXISTS users
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  username TEXT,
+                  password TEXT)''')
 
-# Add a sidebar for selecting the tool
-st.sidebar.header('Выберите инструмент')
-tool = st.sidebar.radio('',
-                        ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
+    conn.commit()
+    conn.close()
 
-# Define the chat function
-def chat():
-    if 'chat_history' not in st.session_state:
-        st.session_state['chat_history'] = []
+create_database()
 
-    message = st.text_input('Ваше сообщение:', key='chat_input')
-    uploaded_file = st.file_uploader('Загрузите файл:', type=['txt', 'pdf', 'docx'])
+# Функция для добавления пользователя в базу данных
+def add_user(username, password):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
 
-    if st.button('Отправить'):
-        if message:
-            st.session_state.chat_history.append((message, 'user'))
-            st.session_state.chat_history.append(('Ответ от нейросети', 'ai'))
-            st.experimental_rerun()
+    c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
 
-        if uploaded_file is not None:
-            # Обработка загруженного файла
-            st.session_state.chat_history.append(('Файл:', 'user'))
-            st.session_state.chat_history.append((uploaded_file, 'user'))
-            st.experimental_rerun()
+    conn.commit()
+    conn.close()
 
-    # Display the chat history in a scrollable container
-    chat_container = st.container()
-    with chat_container:
-        if st.session_state.chat_history:
-            st.markdown('<div style="height: 300px; overflow-y: scroll;">', unsafe_allow_html=True)
-            for i, (msg, role) in enumerate(st.session_state.chat_history):
-                if role == 'user':
-                    st.markdown(f"**Вы:** {msg}", unsafe_allow_html=True)
-                else:
-                    st.markdown(f"**Нейросеть:** {msg}", unsafe_allow_html=True)
-                if i < len(st.session_state.chat_history) - 1:
-                    st.markdown('---')
-            st.markdown('</div>', unsafe_allow_html=True)
+# Функция для проверки аутентификации пользователя
+def check_credentials(username, password):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
 
-    # Place the input field below the chat history
-    input_container = st.container()
-    with input_container:
-        st.write('')
-        if st.button('Отправить'):
-            if message:
-                st.session_state.chat_history.append((message, 'user'))
-                st.session_state.chat_history.append(('Ответ от нейросети', 'ai'))
-                st.experimental_rerun()
+    c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
+    result = c.fetchone()
 
-        if uploaded_file is not None:
-            # Обработка загруженного файла
-            st.session_state.chat_history.append(('Файл:', 'user'))
-            st.session_state.chat_history.append((uploaded_file, 'user'))
-            st.experimental_rerun()
+    conn.close()
 
-# Define the file upload function
-def file_upload():
-    uploaded_work = st.file_uploader('Загрузите файл своей работы:')
-    uploaded_task = st.file_uploader('Загрузите файл технического задания:')
+    if result:
+        return True
+    else:
+        return False
 
-    if st.button('Сгенерировать файл'):
-        st.write('Сгенерированный файл:')
+# Функция для отображения формы входа
+def login():
+    username = st.text_input('Имя пользователя')
+    password = st.text_input('Пароль', type='password')
 
-# Define the literature search function
-def literature_search():
-    topic = st.text_input('Введите тему проекта:')
-    description = st.text_area('Короткое описание:')
-    uploaded_file = st.file_uploader('Загрузите файл:', type=['txt', 'pdf', 'docx'])
+    if st.button('Войти'):
+        if check_credentials(username, password):
+            st.success('Успешный вход!')
+            # Перенаправление на основную платформу
+        else:
+            st.error('Неверное имя пользователя или пароль.')
 
-    if st.button('Найти литературу'):
-        st.write('Результаты поиска литературы:')
+# Функция для отображения формы регистрации
+def registration():
+    new_username = st.text_input('Новое имя пользователя')
+    new_password = st.text_input('Новый пароль', type='password')
 
-        if uploaded_file is not None:
-            # Обработка загруженного файла
-            st.write('Вы загрузили файл:', uploaded_file)
+    if st.button('Зарегистрироваться'):
+        add_user(new_username, new_password)
+        st.success('Регистрация прошла успешно!')
 
-# Display the appropriate tool based on the selected option
-if tool == 'Чат с нейросетью':
-    chat()
-elif tool == 'Загрузка файлов':
-    file_upload()
-elif tool == 'Поиск литературы':
-    literature_search()
+# Функция для отображения основной платформы
+def main_platform():
+    # Добавьте здесь функционал основной платформы (чат с нейросетью, загрузка файлов, поиск литературы)
+    pass
+
+# Проверка аутентификации пользователя
+if 'username' not in st.session_state:
+    # Отображение формы входа или регистрации
+    login()
+    registration()
 else:
-    st.write('')
+    # Если пользователь аутентифицирован, отображаем основную платформу
+    main_platform()
