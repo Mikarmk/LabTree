@@ -1,33 +1,44 @@
 import streamlit as st
 
-# Заголовок приложения
+# Set the page title
 st.title('Нейросеть и инструменты')
 
-# Поле для логотипа
-st.sidebar.image('logo.png', width=100)
+# Add a logo
+if st.sidebar.image('logo.png', width=100):
+    st.sidebar.markdown('')
 
-# Панель инструментов
+# Add a sidebar for selecting the tool
 st.sidebar.header('Выберите инструмент')
+tool = st.sidebar.selectbox('', ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
 
-# Кнопки инструментов
-if st.sidebar.button('Чат с нейросетью'):
-    tool = 'Чат с нейросетью'
-elif st.sidebar.button('Загрузка файлов'):
-    tool = 'Загрузка файлов'
-elif st.sidebar.button('Поиск литературы'):
-    tool = 'Поиск литературы'
-
-# Инструмент "Чат с нейросетью"
-if tool == 'Чат с нейросетью':
-    st.write('Чат с нейросетью')
-    message = st.text_input('Ваше сообщение')
+# Define the chat function
+def chat():
+    message = st.text_input('Ваше сообщение:')
     if st.button('Отправить'):
         st.write('Ответ от нейросети')
 
-# Инструмент "Загрузка файлов"
-elif tool == 'Загрузка файлов':
-    st.write('Здесь будет инструмент загрузки файлов')
+# Define the file upload function
+def file_upload():
+    uploaded_work = st.file_uploader('Загрузите файл своей работы:')
+    uploaded_task = st.file_uploader('Загрузите файл технического задания:')
 
-# Инструмент "Поиск литературы"
+    if st.button('Сгенерировать файл'):
+        st.write('Сгенерированный файл:')
+
+# Define the literature search function
+def literature_search():
+    topic = st.text_input('Введите тему проекта:')
+    description = st.text_area('Короткое описание:')
+
+    if st.button('Найти литературу'):
+        st.write('Результаты поиска литературы:')
+
+# Display the appropriate tool based on the selected option
+if tool == 'Чат с нейросетью':
+    chat()
+elif tool == 'Загрузка файлов':
+    file_upload()
+elif tool == 'Поиск литературы':
+    literature_search()
 else:
-    st.write('Здесь будет инструмент поиска литературы')
+    st.write('')
