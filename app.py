@@ -1,31 +1,26 @@
 import streamlit as st
 
 # Заголовок приложения
-st.title('Чат ИИ')
+st.title('Нейросеть и инструменты')
 
-# Форма для входа
-login_form = st.form(key='login_form')
-username = login_form.text_input('Имя пользователя')
-password = login_form.text_input('Пароль', type='password')
-submit_button = login_form.form_submit_button('Войти')
+# Панель инструментов слева
+tool = st.sidebar.selectbox('Выберите инструмент', ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
 
-if submit_button:
-    # Проверка введенных данных и авторизация пользователя
-    st.write('Авторизация пользователя...')
+# Инструмент "Чат с нейросетью"
+if tool == 'Чат с нейросетью':
+    st.write('Здесь будет чат с нейросетью')
 
-# Форма для загрузки файла
-upload_form = st.form(key='upload_form')
-file = upload_form.file_uploader('Загрузить файл')
-upload_button = upload_form.form_submit_button('Загрузить')
+# Инструмент "Загрузка файлов"
+elif tool == 'Загрузка файлов':
+    uploaded_work = st.file_uploader('Загрузите файл своей работы')
+    uploaded_task = st.file_uploader('Загрузите файл технического задания')
 
-if upload_button:
-    # Обработка загруженного файла
-    st.write('Обработка файла...')
+    if st.button('Сгенерировать файл'):
+        st.write('Здесь будет сгенерированный файл')
 
-# Чат-бот
-user_input = st.text_input('Введите сообщение')
-send_button = st.button('Отправить')
-
-if send_button:
-    # Отправка сообщения и получение ответа от чат-бота
-    st.write('Ответ нейросети: ...')
+# Инструмент "Поиск литературы"
+else:
+    topic = st.text_input('Введите тему проекта')
+    description = st.text_area('Короткое описание')
+    if st.button('Найти литературу'):
+        st.write('Здесь будет результаты поиска литературы')
