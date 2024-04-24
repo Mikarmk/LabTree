@@ -19,10 +19,18 @@ def chat():
         st.session_state['chat_history'] = []
 
     message = st.text_input('Ваше сообщение:', key='chat_input')
+    uploaded_file = st.file_uploader('Загрузите файл:', type=['txt', 'pdf', 'docx'])
+
     if st.button('Отправить'):
         if message:
             st.session_state.chat_history.append((message, 'user'))
             st.session_state.chat_history.append(('Ответ от нейросети', 'ai'))
+            st.experimental_rerun()
+
+        if uploaded_file is not None:
+            # Обработка загруженного файла
+            st.session_state.chat_history.append(('Файл:', 'user'))
+            st.session_state.chat_history.append((uploaded_file, 'user'))
             st.experimental_rerun()
 
     chat_history = st.session_state.chat_history
@@ -31,7 +39,7 @@ def chat():
         if role == 'user':
             st.markdown(f"**Вы:** {msg}", unsafe_allow_html=True)
         else:
-            st.markdown(f"**Нейросеть:** Ответ от нейросети", unsafe_allow_html=True)
+            st.markdown(f"**Нейросеть:** {msg}", unsafe_allow_html=True)
 
         if i < len(chat_history) - 1:
             st.markdown('---')
@@ -50,28 +58,14 @@ def file_upload():
 def literature_search():
     topic = st.text_input('Введите тему проекта:')
     description = st.text_area('Короткое описание:')
+    uploaded_file = st.file_uploader('Загрузите файл:', type=['txt', 'pdf', 'docx'])
 
     if st.button('Найти литературу'):
         st.write('Результаты поиска литературы:')
 
-# Style the buttons
-def style_button(button_name):
-    return f"""
-    <style>
-    {button_name} {{
-        background-color: #0070f3;
-        color: white;
-        font-size: 16px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-    }}
-    </style>
-    """
-
-st.markdown(style_button('.stButton'), unsafe_allow_html=True)
+        if uploaded_file is not None:
+            # Обработка загруженного файла
+            st.write('Вы загрузили файл:', uploaded_file)
 
 # Display the appropriate tool based on the selected option
 if tool == 'Чат с нейросетью':
