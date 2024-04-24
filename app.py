@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Заголовок приложения
-st.title('Чат-бот и Искусственный Интеллект')
+st.title('Чат ИИ')
 
 # Форма для входа
 login_form = st.form(key='login_form')
