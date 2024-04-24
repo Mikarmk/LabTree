@@ -1,0 +1,25 @@
+
+.stButton {
+    background-color: #0070f3;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+
+.chat-message {
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+
+.sidebar {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+}
