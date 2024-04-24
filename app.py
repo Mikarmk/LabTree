@@ -9,7 +9,8 @@ if st.sidebar.image('logo.png', width=100):
 
 # Add a sidebar for selecting the tool
 st.sidebar.header('Выберите инструмент')
-tool = st.sidebar.selectbox('', ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
+tool = st.sidebar.radio('',
+                        ['Чат с нейросетью', 'Загрузка файлов', 'Поиск литературы'])
 
 # Define the chat function
 def chat():
